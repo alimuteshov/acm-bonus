@@ -3,6 +3,9 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+
+#include "Prefix.h"
+#include "StringBuilder.h"
 #include "Overlap.h"
 
 using namespace std;
@@ -90,6 +93,76 @@ int main()
         }
         m[max_i] = max_j;
     }
+
+    vector<vector<int>> cycles;
+    vector<int> cycle;
+
+    bool* mark = new bool[n];
+
+    for (int j = 0; j < n; j++) {
+        mark[j] = false;
+    }
+
+
+    for (int i = 0; i < n; i++)
+    {
+        if (mark[i])
+        {
+            continue;
+        }
+
+        cycle.push_back(i);
+        mark[i] = true;
+
+        if (m[i] == cycle[0])
+        {
+            cycles.push_back(cycle);
+            cycle = vector<int>();
+            i = 0;
+        }
+        else
+        {
+            i = m[i] - 1;
+        }
+    }
+
+    vector<string> super_strings;
+    vector<int> ovs;
+    for (int i = 0; i < (cycles.size()); i++)
+    {
+        string str;
+        ovs = vector<int>();
+        for (int j = 0; j < cycles[i].size() - 1; j++)
+        {
+            ovs.push_back(table[cycles[i][j]][cycles[i][j + 1]]);
+        }
+
+        int min = table[cycles[i][cycles[i].size() - 1]][cycles[i][0]];
+        int shift = 0;
+
+        for (int i = 0; i < ovs.size(); i++)
+        {
+            if (ovs[i] < min)
+            {
+                min = ovs[i];
+                shift = i + 1;
+            }
+
+        }
+
+        rotate(cycles[i].begin(), cycles[i].begin() + shift, cycles[i].end());
+
+        for (int j = 0; j < cycles[i].size() - 1; j++) {
+            str = str + Prefix(list[cycles[i][j]].value,table[cycles[i][j]][cycles[i][j + 1]]);
+        }
+
+        str += list[cycles[i][cycles[i].size() - 1]].value;
+
+        super_strings.push_back(str);
+    }
+
+    cout << (StringBuilder(super_strings)) << endl;
+    cout << ((StringBuilder(super_strings))).length() << endl;
 
     return 0;
 }
