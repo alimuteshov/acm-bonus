@@ -3,7 +3,6 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-
 #include "Prefix.h"
 #include "StringBuilder.h"
 #include "Overlap.h"
@@ -164,5 +163,16 @@ int main()
     cout << (StringBuilder(super_strings)) << endl;
     cout << ((StringBuilder(super_strings))).length() << endl;
 
+    delete[] list;
+    for (int i = 0; i < n; ++i)
+    {
+        delete[] table[i];
+    }
+    for (int i = 0; i < n; ++i)
+    {
+        delete[] arr[i];
+    }
+    delete[] m;
+    delete[] mark;
     return 0;
 }
