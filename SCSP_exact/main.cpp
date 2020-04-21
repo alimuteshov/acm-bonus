@@ -3,7 +3,6 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-
 #include "Swap.h"
 #include "NextSet.h"
 #include "Overlap.h"
@@ -110,21 +109,6 @@ int main()
         table[i] = new int[n];
     }
 
-    //for (int i = 0; i < n; i++)
-    //{
-    //    for (int j = 0; j < n; j++)
-    //    {
-    //        if (i != j)
-    //        {
-    //            table[i][j] = Overlap(list[i].value, list[j].value);
-    //        }
-    //        else
-    //        {
-    //            table[i][j] = 0;
-    //        }
-    //    }
-    //}
-
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
@@ -187,8 +171,15 @@ int main()
         }
     }
     cout << "superstring:" << answer << endl;
-
     cout << answer.length() << endl;
+
+    delete[] list;
+    for (int i = 0; i < n; ++i)
+    {
+        delete[] table[i];
+    }   
+    delete[] a;
+    delete[] solution;
 
     return 0;
 }
