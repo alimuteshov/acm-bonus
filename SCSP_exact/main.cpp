@@ -110,5 +110,85 @@ int main()
         table[i] = new int[n];
     }
 
+    //for (int i = 0; i < n; i++)
+    //{
+    //    for (int j = 0; j < n; j++)
+    //    {
+    //        if (i != j)
+    //        {
+    //            table[i][j] = Overlap(list[i].value, list[j].value);
+    //        }
+    //        else
+    //        {
+    //            table[i][j] = 0;
+    //        }
+    //    }
+    //}
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (i != j)
+            {
+                table[i][j] = K - Overlap(list[i].value, list[j].value);
+            }
+            else
+            {
+                table[i][j] = 0;
+            }
+        }
+    }
+
+    int* a = new int[n];
+    int path = 0;
+    int* solution = new int[n];
+
+    for (int i = 0; i < n; i++)
+        a[i] = i;
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        path += table[a[i]][a[i + 1]];
+    }
+    
+    for (int i = 0; i < n; i++)
+    {
+        solution[i] = a[i];
+    }
+    while (NextSet(a, n))
+    {
+        int temp = 0;
+        for (int i = 0; i < n - 1; i++)
+        {
+            temp += table[a[i]][a[i + 1]];
+        }
+        if (temp < path)
+        {
+            path = temp;
+            for (int i = 0; i < n; i++)
+            {
+                solution[i] = a[i];
+            }
+        }
+    }
+
+    string answer;
+    for (int i = 0; i < (list[solution[0]].value).length(); i++)
+    {
+        answer += list[solution[0]].value[i];
+    }
+
+    for (int i = 1; i < n; i++)
+    {
+        for (int j = Overlap(list[solution[i - 1]].value, list[solution[i]].value); j < (list[solution[i]].value).length(); j++)
+        {
+            answer += list[solution[i]].value[j];
+        }
+    }
+    cout << "superstring:" << answer << endl;
+
+    cout << answer.length() << endl;
+
     return 0;
 }
