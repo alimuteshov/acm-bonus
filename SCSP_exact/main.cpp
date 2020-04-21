@@ -93,13 +93,12 @@ int main()
             K = s.length();
         }
     }
+    K++;
 
-    for (int i = 0; i < n - magic.size(); i++)
+    /*for (int i = 0; i < n - magic.size(); i++)
     {
         cout << list[i].value << endl;
-    }
-
-    K++;
+    }*/
 
     n = n - magic.size();
 
