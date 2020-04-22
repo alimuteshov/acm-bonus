@@ -6,37 +6,90 @@ using namespace std;
 
 int Overlap(string s1, string s2)
 {
-    int overlap = 0;
-    int len = 0;
-    if (s1.length() <= s2.length())
+    /*KMP */
+    int s1_length = s1.length();
+    int s2_length = s2.length();
+    if (s1_length == 0 || s2_length == 0)
     {
-        len = s1.length();
+        return 0;
+    }
+    if (s1_length > s2_length)
+    {
+        string temp;
+        for (int i = s1_length - s2_length; i < s1_length; i++)
+        {
+            temp += s1[i];
+        }
+        s1 = temp;
+    }
+    else if (s1_length < s2_length)
+    {
+        string temp;
+        for (int i = 0; i < s1_length; i++)
+        {
+            temp += s2[i];
+        }
+        s2 = temp;
+    }
+    int text_length = 0;
+    if (s1_length <= s2_length)
+    {
+        text_length = s1_length;
     }
     else
     {
-        len = s2.length();
+        text_length = s2_length;
     }
-    for (int i = 0; i < len; i++)
+    if (s1 == s2)
     {
-        std::string temp1;
-        for (int j = 0; j <= i; j++)
+        return text_length;
+    }
+    int* array = new int[text_length];
+    array[0] = -1;
+    int pos = 2;
+    int cnd = 0;
+    while (pos < text_length)
+    {
+        if (s2[pos - 1] == s2[cnd])
         {
-            char temp = s1[s1.length() - 1 - j];
-            temp1 = temp + temp1;
+            cnd += 1;
+            array[pos] = cnd;
+            pos += 1;
         }
-        std::string temp2;
-        for (int j = 0; j <= i; j++)
+        else if (cnd > 0)
         {
-            char temp = s2[j];
-            temp2 = temp2 + temp;
+            cnd = array[cnd];
         }
-        if (temp1 == temp2)
+        else
         {
-            if (overlap < i + 1)
+            array[pos] = 0;
+            pos += 1;
+        }
+    }
+    int m = 0;
+    int i = 0;
+    while (m + i < text_length)
+    {
+        if (s2[i] == s1[m + i])
+        {
+            i += 1;
+            if (m + i == text_length)
             {
-                overlap = i + 1;
+                return i;
+            }
+        }
+        else
+        {
+            m += i - array[i];
+            if (array[i] > -1)
+            {
+                i = array[i];
+            }
+            else
+            {
+                i = 0;
             }
         }
     }
-    return overlap;
+    return 0;
 }
