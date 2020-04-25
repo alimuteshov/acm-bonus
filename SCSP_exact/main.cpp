@@ -2,6 +2,7 @@
 #include<string>
 #include <fstream>
 #include <vector>
+#include <set>
 #include <algorithm>
 #include "Swap.h"
 #include "NextSet.h"
@@ -9,24 +10,14 @@
 
 using namespace std;
 
-//void print(int* a, int n)
-//{
-//    static int num = 1; 
-//    cout.width(3);
-//    cout << num++ << ": ";
-//    for (int i = 0; i < n; i++)
-//        cout << a[i] << " ";
-//    cout << endl;
-//}
-
 int main()
 {
     ifstream f("SCSP_in.txt");
     string str;
     int n = 0;
 
+    set<int>clone; // для удаления строк, явл. подстроками
     vector <string> sub_strings;
-    vector <int> magic; // для удаления строк, явл. подстроками
 
     while (getline(f, str))
     {
@@ -34,25 +25,28 @@ int main()
         sub_strings.push_back(str);
     }
     f.close();
+    for (int i = 0; i < sub_strings.size(); i++)
+    {
+        for (int j = i+1; j < sub_strings.size(); j++)
+        {
+            if (sub_strings[i] == sub_strings[j])
+            {
+                clone.insert(j);
+            }
+        }
+    }
 
     for (int i = 0; i < sub_strings.size(); i++) {
         string some_string;
         some_string = sub_strings[i];
 
         for (int j = 0; j < sub_strings.size(); j++) {
-
-            size_t pos = some_string.find(sub_strings[j]);
-            if (i != j) {
-                if (pos != string::npos) {
-                    int a = 0;
-                    for (int k = 0; k < magic.size(); k++) {
-                        if (j == magic[k]) {
-                            a = 1;
-                        }
-                    }
-                    if (a == 0) {
-                        magic.push_back(j);
-                    }
+            if (clone.find(i) == clone.end() && clone.find(j) == clone.end()&&i!=j)
+            {
+                size_t pos = some_string.find(sub_strings[j]);
+                if (pos != string::npos)
+                {
+                    clone.insert(j);
                 }
             }
         }
@@ -62,45 +56,32 @@ int main()
         string value;
     };
 
-    strings* list = new strings[n - magic.size()];
-
-    ifstream fl("SCSP_in.txt");
-    string s;
+    strings* list = new strings[n - clone.size()];
 
     int K = 0;
     int z = 0;
 
     for (int j = 0; j < n; j++)
     {
-        getline(fl, s);
         int flag = 0;
-        for (int i = 0; i < magic.size(); i++)
+        if (clone.find(j) != clone.end())
         {
-            if (j == magic[i])
-            {
-                flag = 1;
-            }
+            flag = 1;
         }
 
         if (flag == 0)
         {
-            list[z].value = s;
+            list[z].value = sub_strings[j];
             z++;
         }
 
-        if (K < s.length())
+        if (K < sub_strings[j].length())
         {
-            K = s.length();
+            K = sub_strings[j].length();
         }
     }
     K++;
-
-    /*for (int i = 0; i < n - magic.size(); i++)
-    {
-        cout << list[i].value << endl;
-    }*/
-
-    n = n - magic.size();
+    n = n - clone.size();
 
     int** table = new int* [n];
     for (int i = 0; i < n; i++)
@@ -134,7 +115,7 @@ int main()
     {
         path += table[a[i]][a[i + 1]];
     }
-    
+
     for (int i = 0; i < n; i++)
     {
         solution[i] = a[i];
@@ -155,7 +136,11 @@ int main()
             }
         }
     }
-
+    delete[] a;
+    for (int i = 0; i < n; ++i)
+    {
+        delete[] table[i];
+    }
     string answer;
     for (int i = 0; i < (list[solution[0]].value).length(); i++)
     {
@@ -169,16 +154,10 @@ int main()
             answer += list[solution[i]].value[j];
         }
     }
-    cout << "superstring:" << answer << endl;
-    cout << answer.length() << endl;
-
     delete[] list;
-    for (int i = 0; i < n; ++i)
-    {
-        delete[] table[i];
-    }   
-    delete[] a;
     delete[] solution;
 
+    cout << "superstring:" << answer << endl;
+    cout << answer.length() << endl;
     return 0;
 }
