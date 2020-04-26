@@ -7,6 +7,10 @@
 #include "Swap.h"
 #include "NextSet.h"
 #include "Overlap.h"
+#include <vld.h>
+//#define _CRTDBG_MAP_ALLOC 
+//#include <stdlib.h>
+//#include <crtdbg.h>  
 
 using namespace std;
 
@@ -25,6 +29,7 @@ int main()
         sub_strings.push_back(str);
     }
     f.close();
+
     for (int i = 0; i < sub_strings.size(); i++)
     {
         for (int j = i+1; j < sub_strings.size(); j++)
@@ -56,10 +61,8 @@ int main()
         string value;
     };
 
-    strings* list = new strings[n - clone.size()];
-
+    vector<string> list;
     int K = 0;
-    int z = 0;
 
     for (int j = 0; j < n; j++)
     {
@@ -71,8 +74,7 @@ int main()
 
         if (flag == 0)
         {
-            list[z].value = sub_strings[j];
-            z++;
+            list.push_back(sub_strings[j]);
         }
 
         if (K < sub_strings[j].length())
@@ -83,19 +85,19 @@ int main()
     K++;
     n = n - clone.size();
 
-    int** table = new int* [n];
+    /*int** table = new int* [n];
     for (int i = 0; i < n; i++)
     {
         table[i] = new int[n];
-    }
-
+    }*/
+    std::vector<std::vector<int>> table(n, std::vector<int>(n, 0));
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
             if (i != j)
             {
-                table[i][j] = K - Overlap(list[i].value, list[j].value);
+                table[i][j] = K - Overlap(list[i], list[j]);
             }
             else
             {
@@ -137,24 +139,19 @@ int main()
         }
     }
     delete[] a;
-    for (int i = 0; i < n; ++i)
-    {
-        delete[] table[i];
-    }
     string answer;
-    for (int i = 0; i < (list[solution[0]].value).length(); i++)
+    for (int i = 0; i < (list[solution[0]]).length(); i++)
     {
-        answer += list[solution[0]].value[i];
+        answer += list[solution[0]][i];
     }
 
     for (int i = 1; i < n; i++)
     {
-        for (int j = Overlap(list[solution[i - 1]].value, list[solution[i]].value); j < (list[solution[i]].value).length(); j++)
+        for (int j = Overlap(list[solution[i - 1]], list[solution[i]]); j < (list[solution[i]]).length(); j++)
         {
-            answer += list[solution[i]].value[j];
+            answer += list[solution[i]][j];
         }
     }
-    delete[] list;
     delete[] solution;
 
     cout << "superstring:" << answer << endl;

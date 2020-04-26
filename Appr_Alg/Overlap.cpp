@@ -79,6 +79,7 @@ int Overlap(string s1, string s2)
             i += 1;
             if (m + i == text_length)
             {
+                delete[] array;
                 return i;
             }
         }
@@ -95,5 +96,6 @@ int Overlap(string s1, string s2)
             }
         }
     }
+    delete[] array;
     return 0;
 }
