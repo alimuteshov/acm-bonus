@@ -34,17 +34,8 @@ int main()
         list[j].value = s;
     }
 
-    int** table = new int* [n];
-    for (int i = 0; i < n; i++)
-    {
-        table[i] = new int[n];
-    }
-
-    int** arr = new int* [n];
-    for (int i = 0; i < n; i++)
-    {
-        arr[i] = new int[n];
-    }
+    std::vector<std::vector<int>> table(n, std::vector<int>(n, 0));
+    std::vector<std::vector<int>> arr(n, std::vector<int>(n, 0));
 
     for (int i = 0; i < n; i++)
     {
@@ -164,14 +155,6 @@ int main()
     cout << ((StringBuilder(super_strings))).length() << endl;
 
     delete[] list;
-    for (int i = 0; i < n; ++i)
-    {
-        delete[] table[i];
-    }
-    for (int i = 0; i < n; ++i)
-    {
-        delete[] arr[i];
-    }
     delete[] m;
     delete[] mark;
     return 0;
