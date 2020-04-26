@@ -6,6 +6,7 @@ using namespace std;
 
 int Overlap(string s1, string s2)
 {
+    /*KMP */
     int s1_length = s1.length();
     int s2_length = s2.length();
     if (s1_length == 0 || s2_length == 0)
@@ -44,6 +45,10 @@ int Overlap(string s1, string s2)
         return text_length;
     }
     int* array = new int[text_length];
+    for (int i = 0; i < text_length; i++)
+    {
+        array[i] = 0;
+    }
     array[0] = -1;
     int pos = 2;
     int cnd = 0;
@@ -74,7 +79,6 @@ int Overlap(string s1, string s2)
             i += 1;
             if (m + i == text_length)
             {
-                delete[] array;
                 return i;
             }
         }
@@ -91,6 +95,5 @@ int Overlap(string s1, string s2)
             }
         }
     }
-    delete[] array;
     return 0;
 }
